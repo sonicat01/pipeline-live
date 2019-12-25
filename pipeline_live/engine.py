@@ -241,7 +241,7 @@ class LivePipelineEngine(object):
                 )
                 loader = term.dataset.get_loader()
                 loaded = loader.load_adjusted_array(
-                    to_load, mask_dates, symbols, mask,
+                    None, to_load, mask_dates, symbols, mask,
                 )
                 workspace.update(loaded)
             else:

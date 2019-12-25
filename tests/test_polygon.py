@@ -14,7 +14,7 @@ def test_PolygonCompany(tradeapi, data_path):
     marketcap = PolygonCompany.marketcap
     loader = marketcap.dataset.get_loader()
     date = pd.Timestamp('2018-08-20', tz='utc')
-    out = loader.load_adjusted_array([marketcap], [date], ['AA'], [])
+    out = loader.load_adjusted_array(None, [marketcap], [date], ['AA'], [])
 
     assert out[marketcap][0][0] > 10e6
 
