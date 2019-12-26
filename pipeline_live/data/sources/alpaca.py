@@ -1,13 +1,22 @@
 import alpaca_trade_api as tradeapi
-
+import os
 from .util import (
     daily_cache, parallelize
 )
 
+alpaca = tradeapi.REST(key_id=os.environ.get('PAPER_APCA_API_KEY_ID'),
+                       secret_key=os.environ.get('PAPER_APCA_API_SECRET_KEY'),
+                       base_url=os.environ.get('PAPER_APCA_API_BASE_URL'),
+                       api_version='v2')
+
+alpaca_live = tradeapi.REST(key_id=os.environ.get('APCA_API_KEY_ID'),
+                            secret_key=os.environ.get('APCA_API_SECRET_KEY'),
+                            base_url=os.environ.get('APCA_API_BASE_URL'),
+                            api_version='v2')
 
 def list_symbols():
     return [
-        a.symbol for a in tradeapi.REST().list_assets()
+        a.symbol for a in alpaca.list_assets()
         if a.tradable and a.status == 'active'
     ]
 
@@ -28,7 +37,7 @@ def _get_stockprices(symbols, limit=365, timespan='day'):
     '''
 
     def fetch(symbols):
-        barset = tradeapi.REST().get_barset(symbols, timespan, limit)
+        barset = alpaca.get_barset(symbols, timespan, limit)
         data = {}
         for symbol in barset:
             df = barset[symbol].df
