@@ -58,3 +58,21 @@ def _financials(all_symbols):
         return api.polygon.get('/meta/symbols/financials', params=params)
 
     return parallelize(fetch, workers=25, splitlen=50)(all_symbols)
+
+def financialsv2():
+    all_symbols = list_symbols()
+    return _financialsv2(all_symbols)
+
+
+@daily_cache(filename='polygon_financialsv2.pkl')
+def _financialsv2(all_symbols):
+    def fetch(symbols):
+        api = alpaca_live
+        params = {
+            'symbols': ','.join(symbols),
+            'limit': 1,
+            'type': 'Q',
+        }
+        return api.polygon.get('/reference/financials', params=params)
+
+    return parallelize(fetch, workers=25, splitlen=50)(all_symbols)
