@@ -24,7 +24,7 @@ class PolygonFinancialsLoader(PipelineLoader):
 
     def load_adjusted_array(self, domain, columns, dates, sids, mask):
 
-        financials = polygon.financials()
+        financials = polygon.financialsv2()
         out = {}
         for c in columns:
             data = [
