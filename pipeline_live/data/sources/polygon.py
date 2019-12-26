@@ -73,6 +73,6 @@ def _financialsv2(all_symbols):
             'limit': 1,
             'type': 'Q',
         }
-        return api.polygon.get('/reference/financials', params=params)
+        return api.polygon.get('/reference/financials', params=params, version='v2')
 
     return parallelize(fetch, workers=25, splitlen=50)(all_symbols)
