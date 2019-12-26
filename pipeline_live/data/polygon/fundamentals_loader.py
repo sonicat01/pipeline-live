@@ -1,12 +1,11 @@
 import numpy as np
-from interface import implements
 
 from zipline.pipeline.loaders.base import PipelineLoader
 
 from pipeline_live.data.sources import polygon
 
 
-class PolygonCompanyLoader(implements(PipelineLoader)):
+class PolygonCompanyLoader(PipelineLoader):
 
     def load_adjusted_array(self, domain, columns, dates, sids, mask):
 
@@ -21,7 +20,7 @@ class PolygonCompanyLoader(implements(PipelineLoader)):
 
         return out
 
-class PolygonFinancialsLoader(implements(PipelineLoader)):
+class PolygonFinancialsLoader(PipelineLoader):
 
     def load_adjusted_array(self, domain, columns, dates, sids, mask):
 

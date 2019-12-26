@@ -1,7 +1,6 @@
 import numpy as np
 import logbook
 import pandas as pd
-from interface import implements
 
 from zipline.lib.adjusted_array import AdjustedArray
 from zipline.pipeline.loaders.base import PipelineLoader
@@ -14,7 +13,7 @@ from pipeline_live.data.sources import iex
 log = logbook.Logger(__name__)
 
 
-class USEquityPricingLoader(implements(PipelineLoader)):
+class USEquityPricingLoader(PipelineLoader):
     """
     PipelineLoader for US Equity Pricing data
     """

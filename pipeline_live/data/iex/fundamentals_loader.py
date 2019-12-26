@@ -1,7 +1,6 @@
 import logging
 
 import numpy as np
-from interface import implements
 
 from pipeline_live.data.sources import iex
 from zipline.pipeline.loaders.base import PipelineLoader
@@ -10,7 +9,7 @@ from zipline.utils.numpy_utils import object_dtype
 log = logging.getLogger(__name__)
 
 
-class IEXEventLoader(implements(PipelineLoader)):
+class IEXEventLoader(PipelineLoader):
 
     def _safe_flat_getter(self, symbol, symbols, column):
         data = symbols.get(symbol, None)
@@ -34,7 +33,7 @@ class IEXEventLoader(implements(PipelineLoader)):
         return out
 
 
-class IEXBaseLoader(implements(PipelineLoader)):
+class IEXBaseLoader(PipelineLoader):
 
     def load_adjusted_array(self, domain, columns, dates, sids, mask):
         symbol_dict = self._load()
