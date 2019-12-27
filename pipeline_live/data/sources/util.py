@@ -75,3 +75,39 @@ def daily_cache(filename):
             return body
         return wrapper
     return decorator
+
+def monthly_cache(filename):
+    kwd_mark = '||'
+
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            key = args + (kwd_mark,) + tuple(sorted(kwargs.items()))
+            hash = hashlib.md5()
+            hash.update(str(key).encode('utf-8'))
+            hash.update(pd.Timestamp.utcnow().strftime(
+                '%Y-%m').encode('utf-8'))
+            digest = hash.hexdigest()
+            dirpath = paths.data_path(['monthlycache'])
+            os.makedirs(dirpath, exist_ok=True)
+            filepath = os.path.join(dirpath, filename)
+            if os.path.exists(filepath):
+                try:
+                    with open(filepath, 'rb') as fp:
+                        ret = pickle.load(fp)
+                        if ret['digest'] == digest:
+                            return ret['body']
+                        print('{}: digest mismatch {} != {}, reloading'.format(
+                            filepath, ret['digest'], digest
+                        ))
+                except Exception as e:
+                    print('cache error {}'.format(e))
+            body = func(*args, **kwargs)
+
+            with open(filepath, 'wb') as fp:
+                pickle.dump({
+                    'digest': digest,
+                    'body': body,
+                }, fp)
+            return body
+        return wrapper
+    return decorator

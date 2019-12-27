@@ -12,7 +12,7 @@ alpaca_live = tradeapi.REST(key_id=os.environ.get('APCA_API_KEY_ID'),
                             api_version='v2')
 
 from .util import (
-    daily_cache, parallelize
+    daily_cache, monthly_cache, parallelize
 )
 
 
@@ -64,15 +64,18 @@ def financialsv2():
     return _financialsv2(all_symbols)
 
 
-@daily_cache(filename='polygon_financialsv2.pkl')
+@monthly_cache(filename='polygon_financialsv2.pkl')
 def _financialsv2(all_symbols):
-    def fetch(symbols):
+    def fetch(symbol):
+        path = '/reference/financials/{}'.format(symbol[0])
         api = alpaca_live
         params = {
-            'symbols': ','.join(symbols),
             'limit': 1,
             'type': 'Q',
         }
-        return api.polygon.get('/reference/financials', params=params, version='v2')
-
-    return parallelize(fetch, workers=25, splitlen=50)(all_symbols)
+        res = api.polygon.get(path, params=params, version='v2')
+        if len(res['results']) == 1:
+            return {symbol[0]: res['results'][0]}
+        else:
+            return {"NORESULT": {}}
+    return parallelize(fetch, workers=50, splitlen=1)(all_symbols)
