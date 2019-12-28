@@ -11,6 +11,7 @@ from .fundamentals_loader import (
     IEXFinancialsLoader,
     IEXEarningsLoader,
     IEXAdvancedStatsLoader,
+    IEXIncomeLoader,
 )
 
 
@@ -224,6 +225,52 @@ class IEXAdvancedStats(DataSet):
     putCallRatio = Column(float64_dtype, missing_value=np.nan)
 
     _loader = IEXAdvancedStatsLoader()
+
+    @classmethod
+    def get_loader(cls):
+        return cls._loader
+
+class IEXIncome(DataSet):
+
+    '''
+    "reportDate":"2019-09-30",
+	"totalRevenue":65007314152,
+	"costOfRevenue":40298857745,
+	"grossProfit":25007419882,
+	"researchAndDevelopment":4195678780,
+	"sellingGeneralAndAdmin":4759757117,
+	"operatingExpense":50874194223,
+	"operatingIncome":15807717541,
+	"otherIncomeExpenseNet":663505746,
+	"ebit":16250845749,
+	"interestIncome":816275044,
+	"pretaxIncome":16777437134,
+	"incomeTax":2539655585,
+	"minorityInterest":0,
+	"netIncome":13809902052,
+	"netIncomeBasic":13713273392
+    '''
+    reportDate = Column(
+        datetime64ns_dtype,
+        missing_value=np.datetime64('1970-01-01'))
+
+    totalRevenue = Column(float64_dtype, missing_value=np.nan)
+    costOfRevenue = Column(float64_dtype, missing_value=np.nan)
+    grossProfit = Column(float64_dtype, missing_value=np.nan)
+    researchAndDevelopment = Column(float64_dtype, missing_value=np.nan)
+    sellingGeneralAndAdmin = Column(float64_dtype, missing_value=np.nan)
+    operatingExpense = Column(float64_dtype, missing_value=np.nan)
+    operatingIncome = Column(float64_dtype, missing_value=np.nan)
+    otherIncomeExpenseNet = Column(float64_dtype, missing_value=np.nan)
+    ebit = Column(float64_dtype, missing_value=np.nan)
+    interestIncome = Column(float64_dtype, missing_value=np.nan)
+    pretaxIncome = Column(float64_dtype, missing_value=np.nan)
+    incomeTax = Column(float64_dtype, missing_value=np.nan)
+    minorityInterest = Column(float64_dtype, missing_value=np.nan)
+    netIncome = Column(float64_dtype, missing_value=np.nan)
+    netIncomeBasic = Column(float64_dtype, missing_value=np.nan)
+
+    _loader = IEXIncomeLoader()
 
     @classmethod
     def get_loader(cls):

@@ -126,3 +126,24 @@ def _advancedstats(all_symbols):
         else:
             return {"NORESULT": {}}
     return parallelize(fetch, workers=50, splitlen=1)(all_symbols)
+
+
+def income():
+    all_symbols = list_symbols()
+    return _income(all_symbols)
+
+
+@quarterly_cache(filename='iex_income.pkl')
+def _income(all_symbols):
+    def fetch(symbol):
+        path = '/{}/income'.format(symbol[0])
+        params = {
+            'period': 'quarter',
+            'last': 12,
+        }
+        res = rest.get(path, params)
+        if len(res) == 1:
+            return {symbol[0]: res['income'][0]}
+        else:
+            return {"NORESULT": {}}
+    return parallelize(fetch, workers=50, splitlen=1)(all_symbols)
