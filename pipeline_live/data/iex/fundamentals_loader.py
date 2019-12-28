@@ -107,3 +107,18 @@ class IEXIncomeLoader(PipelineLoader):
             out[c] = np.tile(np.array(data, dtype=c.dtype), (len(dates), 1))
 
         return out
+
+class IEXBalanceSheetLoader(PipelineLoader):
+
+    def load_adjusted_array(self, domain, columns, dates, sids, mask):
+
+        balancesheet = iex.balancesheet()
+        out = {}
+        for c in columns:
+            data = [
+                balancesheet.get(symbol, {}).get(c.name, c.missing_value)
+                for symbol in sids
+            ]
+            out[c] = np.tile(np.array(data, dtype=c.dtype), (len(dates), 1))
+
+        return out

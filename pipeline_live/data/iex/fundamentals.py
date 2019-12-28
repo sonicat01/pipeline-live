@@ -12,6 +12,7 @@ from .fundamentals_loader import (
     IEXEarningsLoader,
     IEXAdvancedStatsLoader,
     IEXIncomeLoader,
+    IEXBalanceSheetLoader,
 )
 
 
@@ -276,6 +277,72 @@ class IEXIncome(DataSet):
     def get_loader(cls):
         return cls._loader
 
+class IEXBalanceSheet(DataSet):
+
+    '''
+	"reportDate":"2019-09-30",
+	"currentCash":28169210327,
+	"shortTermInvestments":72825415940,
+	"receivables":23861944908,
+	"inventory":4139652796,
+	"otherCurrentAssets":12722261241,
+	"currentAssets":165138453988,
+	"longTermInvestments":107709609907,
+	"propertyPlantEquipment":39136679454,
+	"goodwill":null,
+	"intangibleAssets":null,
+	"otherAssets":32456693775,
+	"totalAssets":342215741120,
+	"accountsPayable":48420404262,
+	"currentLongTermDebt":10742302697,
+	"otherCurrentLiabilities":44762852691,
+	"totalCurrentLiabilities":108256707135,
+	"longTermDebt":93153734757,
+	"otherLiabilities":4092755866,
+	"minorityInterest":0,
+	"totalLiabilities":258015403130,
+	"commonStock":4553279621,
+	"retainedEarnings":46579787687,
+	"treasuryStock":6698172,
+	"capitalSurplus":null,
+	"shareholderEquity":92588745652,
+	"netTangibleAssets":90767561384
+    '''
+    reportDate = Column(
+        datetime64ns_dtype,
+        missing_value=np.datetime64('1970-01-01'))
+    currentCash = Column(float64_dtype, missing_value=np.nan)
+    shortTermInvestments = Column(float64_dtype, missing_value=np.nan)
+    receivables = Column(float64_dtype, missing_value=np.nan)
+    inventory = Column(float64_dtype, missing_value=np.nan)
+    otherCurrentAssets = Column(float64_dtype, missing_value=np.nan)
+    currentAssets = Column(float64_dtype, missing_value=np.nan)
+    longTermInvestments = Column(float64_dtype, missing_value=np.nan)
+    propertyPlantEquipment = Column(float64_dtype, missing_value=np.nan)
+    goodwill = Column(float64_dtype, missing_value=np.nan)
+    intangibleAssets = Column(float64_dtype, missing_value=np.nan)
+    otherAssets = Column(float64_dtype, missing_value=np.nan)
+    totalAssets = Column(float64_dtype, missing_value=np.nan)
+    accountsPayable = Column(float64_dtype, missing_value=np.nan)
+    currentLongTermDebt = Column(float64_dtype, missing_value=np.nan)
+    otherCurrentLiabilities = Column(float64_dtype, missing_value=np.nan)
+    totalCurrentLiabilities = Column(float64_dtype, missing_value=np.nan)
+    longTermDebt = Column(float64_dtype, missing_value=np.nan)
+    otherLiabilities = Column(float64_dtype, missing_value=np.nan)
+    minorityInterest = Column(float64_dtype, missing_value=np.nan)
+    totalLiabilities = Column(float64_dtype, missing_value=np.nan)
+    commonStock = Column(float64_dtype, missing_value=np.nan)
+    retainedEarnings = Column(float64_dtype, missing_value=np.nan)
+    treasuryStock = Column(float64_dtype, missing_value=np.nan)
+    capitalSurplus = Column(float64_dtype, missing_value=np.nan)
+    shareholderEquity = Column(float64_dtype, missing_value=np.nan)
+    netTangibleAssets = Column(float64_dtype, missing_value=np.nan)
+
+    _loader = IEXBalanceSheetLoader()
+
+    @classmethod
+    def get_loader(cls):
+        return cls._loader
 
 
 class IEXKeyStats(DataSet):

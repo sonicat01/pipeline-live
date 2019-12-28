@@ -4,7 +4,7 @@ import pandas as pd
 import requests
 import os
 from .util import (
-    daily_cache, parallelize, quarterly_cache
+    daily_cache, parallelize, quarterly_cache, monthly_cache
 )
 
 
@@ -54,7 +54,7 @@ class IEXGetter(object):
     def __call__(self):
         method_name = 'get_{}'.format(self._method)
 
-        @daily_cache(filename='iex_{}.pkl'.format(self._method))
+        @quarterly_cache(filename='iex_{}.pkl'.format(self._method))
         def _get(all_symbols):
             def fetch(symbols):
                 return _ensure_dict(
@@ -144,6 +144,27 @@ def _income(all_symbols):
         res = rest.get(path, params)
         if len(res) == 1:
             return {symbol[0]: res['income'][0]}
+        else:
+            return {"NORESULT": {}}
+    return parallelize(fetch, workers=50, splitlen=1)(all_symbols)
+
+
+def balancesheet():
+    all_symbols = list_symbols()
+    return _balancesheet(all_symbols)
+
+
+@quarterly_cache(filename='iex_balancesheet.pkl')
+def _balancesheet(all_symbols):
+    def fetch(symbol):
+        path = '/{}/balance-sheet'.format(symbol[0])
+        params = {
+            'period': 'quarter',
+            'last': 12,
+        }
+        res = rest.get(path, params)
+        if len(res) == 1:
+            return {symbol[0]: res['balancesheet'][0]}
         else:
             return {"NORESULT": {}}
     return parallelize(fetch, workers=50, splitlen=1)(all_symbols)
