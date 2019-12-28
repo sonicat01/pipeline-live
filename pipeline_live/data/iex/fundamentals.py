@@ -10,6 +10,7 @@ from .fundamentals_loader import (
     IEXCompanyLoader,
     IEXFinancialsLoader,
     IEXEarningsLoader,
+    IEXAdvancedStatsLoader,
 )
 
 
@@ -75,8 +76,9 @@ class IEXFinancials(DataSet):
         "cashChange": -4954000000,
         "cashFlow": 11155000000
     '''
-
-    reportDate = Column(float64_dtype, missing_value=np.nan)
+    reportDate = Column(
+        datetime64ns_dtype,
+        missing_value=np.datetime64('1970-01-01'))
     grossProfit = Column(float64_dtype, missing_value=np.nan)
     costOfRevenue = Column(float64_dtype, missing_value=np.nan)
     operatingRevenue = Column(float64_dtype, missing_value=np.nan)
@@ -104,6 +106,130 @@ class IEXFinancials(DataSet):
     def get_loader(cls):
         return cls._loader
 
+class IEXAdvancedStats(DataSet):
+
+    '''
+    "week52change":0.870585,
+	"week52high":304.92,
+	"week52low":144,
+	"marketcap":1333087376551,
+	"employees":143501,
+	"day200MovingAvg":226.25,
+	"day50MovingAvg":273.6,
+	"float":4614185772,
+	"avg10Volume":31874487.1,
+	"avg30Volume":26891810.8,
+	"ttmEPS":12.3654,
+	"ttmDividendRate":3,
+	"companyName":"Apple,Inc.",
+	"sharesOutstanding":4448883703,
+	"maxChangePercent":299.8969,
+	"year5ChangePercent":1.6145,
+	"year2ChangePercent":0.72,
+	"year1ChangePercent":0.894531,
+	"ytdChangePercent":0.846095,
+	"month6ChangePercent":0.482769,
+	"month3ChangePercent":0.306137,
+	"month1ChangePercent":0.085486,
+	"day30ChangePercent":0.105903,
+	"day5ChangePercent":0.038741,
+	"nextDividendDate":null,
+	"dividendYield":0.010613182446004909,
+	"nextEarningsDate":"2020-02-11",
+	"exDividendDate":"2019-11-12",
+	"peRatio":24.85,
+	"beta":1.5551090309976225,
+	"totalCash":103462991448,
+	"currentDebt":16415606112,
+	"revenue":272583903431,
+	"grossProfit":98986073753,
+	"totalRevenue":266317004553,
+	"EBITDA":77117950533,
+	"revenuePerShare":60.9,
+	"revenuePerEmployee":1952669.97,
+	"debtToEquity":1.21,
+	"profitMargin":0.2198161454228158,
+	"enterpriseValue":1333786391541,
+	"enterpriseValueToRevenue":5.02,
+	"priceToSales":5.19,
+	"priceToBook":14.877693008945878,
+	"forwardPERatio":null,
+	"pegRatio":5.98,
+	"peHigh":25.637110644176467,
+	"peLow":12.0561976665986,
+	"week52highDate":"2020-01-11",
+	"week52lowDate":"2019-01-10",
+	"putCallRatio":0.578095664092484
+    '''
+
+    week52change = Column(float64_dtype, missing_value=np.nan)
+    week52high = Column(float64_dtype, missing_value=np.nan)
+    week52low = Column(float64_dtype, missing_value=np.nan)
+    marketcap = Column(float64_dtype, missing_value=np.nan)
+    employees = Column(float64_dtype, missing_value=np.nan)
+    day200MovingAvg = Column(float64_dtype, missing_value=np.nan)
+    day50MovingAvg = Column(float64_dtype, missing_value=np.nan)
+    float = Column(float64_dtype, missing_value=np.nan)
+    avg10Volume = Column(float64_dtype, missing_value=np.nan)
+    avg30Volume = Column(float64_dtype, missing_value=np.nan)
+    ttmEPS = Column(float64_dtype, missing_value=np.nan)
+    ttmDividendRate = Column(float64_dtype, missing_value=np.nan)
+    companyName = Column(object_dtype, missing_value='')
+    sharesOutstanding = Column(float64_dtype, missing_value=np.nan)
+    maxChangePercent = Column(float64_dtype, missing_value=np.nan)
+    year5ChangePercent = Column(float64_dtype, missing_value=np.nan)
+    year2ChangePercent = Column(float64_dtype, missing_value=np.nan)
+    year1ChangePercent = Column(float64_dtype, missing_value=np.nan)
+    ytdChangePercent = Column(float64_dtype, missing_value=np.nan)
+    month6ChangePercent = Column(float64_dtype, missing_value=np.nan)
+    month3ChangePercent = Column(float64_dtype, missing_value=np.nan)
+    month1ChangePercent = Column(float64_dtype, missing_value=np.nan)
+    day30ChangePercent = Column(float64_dtype, missing_value=np.nan)
+    day5ChangePercent = Column(float64_dtype, missing_value=np.nan)
+    nextDividendDate = Column(
+        datetime64ns_dtype,
+        missing_value=np.datetime64('1970-01-01'))
+    dividendYield = Column(
+        datetime64ns_dtype,
+        missing_value=np.datetime64('1970-01-01'))
+    exDividendDate = Column(
+        datetime64ns_dtype,
+        missing_value=np.datetime64('1970-01-01'))
+    peRatio = Column(float64_dtype, missing_value=np.nan)
+    beta = Column(float64_dtype, missing_value=np.nan)
+    totalCash = Column(float64_dtype, missing_value=np.nan)
+    currentDebt = Column(float64_dtype, missing_value=np.nan)
+    revenue = Column(float64_dtype, missing_value=np.nan)
+    grossProfit = Column(float64_dtype, missing_value=np.nan)
+    totalRevenue = Column(float64_dtype, missing_value=np.nan)
+    EBITDA = Column(float64_dtype, missing_value=np.nan)
+    revenuePerShare = Column(float64_dtype, missing_value=np.nan)
+    revenuePerEmployee = Column(float64_dtype, missing_value=np.nan)
+    debtToEquity = Column(float64_dtype, missing_value=np.nan)
+    profitMargin = Column(float64_dtype, missing_value=np.nan)
+    enterpriseValue = Column(float64_dtype, missing_value=np.nan)
+    enterpriseValueToRevenue = Column(float64_dtype, missing_value=np.nan)
+    priceToSales = Column(float64_dtype, missing_value=np.nan)
+    priceToBook = Column(float64_dtype, missing_value=np.nan)
+    forwardPERatio = Column(float64_dtype, missing_value=np.nan)
+    pegRatio = Column(float64_dtype, missing_value=np.nan)
+    peHigh = Column(float64_dtype, missing_value=np.nan)
+    peLow = Column(float64_dtype, missing_value=np.nan)
+    week52highDate = Column(
+        datetime64ns_dtype,
+        missing_value=np.datetime64('1970-01-01'))
+    week52lowDate = Column(
+        datetime64ns_dtype,
+        missing_value=np.datetime64('1970-01-01'))
+    putCallRatio = Column(float64_dtype, missing_value=np.nan)
+
+    _loader = IEXAdvancedStatsLoader()
+
+    @classmethod
+    def get_loader(cls):
+        return cls._loader
+
+
 
 class IEXKeyStats(DataSet):
 
@@ -122,7 +248,8 @@ class IEXKeyStats(DataSet):
   "latestEPS": 8.29,
   "latestEPSDate": "2016-09-30",
   "sharesOutstanding": 5213840000,
-  "float": 5203997571, "returnOnEquity": 0.08772939519857577,
+  "float": 5203997571,
+  "returnOnEquity": 0.08772939519857577,
   "consensusEPS": 3.22,
   "numberOfEstimates": 15,
   "symbol": "AAPL",
@@ -133,7 +260,8 @@ class IEXKeyStats(DataSet):
   "debt": 358038000000,
   "ttmEPS": 8.55,
   "revenuePerShare": 42.2830389885382,
-  "revenuePerEmployee": 1900491.3793103448, "peRatioHigh": 25.5,
+  "revenuePerEmployee": 1900491.3793103448,
+  "peRatioHigh": 25.5,
   "peRatioLow": 8.7,
   "EPSSurpriseDollar": null,
   "EPSSurprisePercent": 3.9604,

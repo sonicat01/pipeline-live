@@ -75,3 +75,17 @@ class IEXEarningsLoader(IEXEventLoader):
     def _load(self):
         log.info('Loading Earnings')
         return iex.earnings()
+class IEXAdvancedStatsLoader(PipelineLoader):
+
+    def load_adjusted_array(self, domain, columns, dates, sids, mask):
+
+        advancedstats = iex.advancedstats()
+        out = {}
+        for c in columns:
+            data = [
+                advancedstats.get(symbol, {}).get(c.name, c.missing_value)
+                for symbol in sids
+            ]
+            out[c] = np.tile(np.array(data, dtype=c.dtype), (len(dates), 1))
+
+        return out

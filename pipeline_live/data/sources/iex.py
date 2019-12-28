@@ -1,17 +1,44 @@
 from iexfinance import refdata
 from iexfinance.stocks import Stock
 import pandas as pd
-
+import requests
+import os
 from .util import (
-    daily_cache, parallelize
+    daily_cache, parallelize, quarterly_cache
 )
 
+
+class REST(object):
+
+    def __init__(self, api_token, staging=False):
+        self._api_token = get_credentials(api_token)
+        self._staging = staging
+        self._session = requests.Session()
+
+    def _request(self, method, path, params=None):
+        url = 'https://cloud.iexapis.com/stable/stock'+ path
+        params = params or {}
+        params['token'] = self._api_token
+        resp = self._session.request(method, url, params=params)
+        resp.raise_for_status()
+        return resp.json()
+
+    def get(self, path, params=None):
+        return self._request('GET', path, params=params)
+
+rest = REST()
 
 def list_symbols():
     return [
         symbol['symbol'] for symbol in refdata.get_symbols()
     ]
 
+def get_credentials(token=None):
+
+    token = token or os.environ.get('IEX_TOKEN')
+    if token is None :
+        raise ValueError('token must be given to access IEX API',
+                         ' (env: IEX_TOKEN)')
 
 def _ensure_dict(result, symbols):
     if len(symbols) == 1:
@@ -83,3 +110,19 @@ def _get_stockprices(symbols, chart_range='1y'):
         return result
 
     return parallelize(fetch, splitlen=99)(symbols)
+
+def advancedstats():
+    all_symbols = list_symbols()
+    return _advancedstats(all_symbols)
+
+
+@quarterly_cache(filename='iex_advanced-stats.pkl')
+def _advancedstats(all_symbols):
+    def fetch(symbol):
+        path = '/{}/advanced-stats'.format(symbol[0])
+        res = rest.get(path)
+        if len(res) == 1:
+            return {symbol[0]: res}
+        else:
+            return {"NORESULT": {}}
+    return parallelize(fetch, workers=50, splitlen=1)(all_symbols)
