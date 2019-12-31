@@ -99,10 +99,17 @@ class IEXIncomeLoader(PipelineLoader):
 
         income = iex.income()
         out = {}
+
+        def getdata(symbol, name, missing_value):
+            out = income.get(symbol, {})
+            if out == {}:
+                return missing_value
+            else:
+                return out[0].get(name, missing_value)
+
         for c in columns:
             data = [
-                income.get(symbol, {}).get(c.name, c.missing_value)
-                for symbol in sids
+                getdata(symbol, c.name, c.missing_value) for symbol in sids
             ]
             out[c] = np.tile(np.array(data, dtype=c.dtype), (len(dates), 1))
 
@@ -114,10 +121,17 @@ class IEXBalanceSheetLoader(PipelineLoader):
 
         balancesheet = iex.balancesheet()
         out = {}
+
+        def getdata(symbol, name, missing_value):
+            out = balancesheet.get(symbol, {})
+            if out == {}:
+                return missing_value
+            else:
+                return out[0].get(name, missing_value)
+
         for c in columns:
             data = [
-                balancesheet.get(symbol, {}).get(c.name, c.missing_value)
-                for symbol in sids
+                getdata(symbol, c.name, c.missing_value) for symbol in sids
             ]
             out[c] = np.tile(np.array(data, dtype=c.dtype), (len(dates), 1))
 

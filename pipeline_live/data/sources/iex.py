@@ -2,12 +2,20 @@ from iexfinance import refdata
 from iexfinance.stocks import Stock
 import pandas as pd
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 import os
 from .util import (
     daily_cache, parallelize, quarterly_cache, monthly_cache
 )
+error_log = {}
 
+def get_credentials(token=None):
 
+    token = token or os.environ.get('IEX_TOKEN')
+    if token is None :
+        raise ValueError('token must be given to access IEX API',
+                         ' (env: IEX_TOKEN)')
 class REST(object):
 
     def __init__(self, api_token, staging=False):
@@ -18,7 +26,12 @@ class REST(object):
     def _request(self, method, path, params=None):
         url = 'https://cloud.iexapis.com/stable/stock'+ path
         params = params or {}
-        params['token'] = self._api_token
+        params['token'] = os.environ.get('IEX_TOKEN')
+        print(url, params)
+        retry = Retry(connect=10, backoff_factor=0.5)
+        adapter = HTTPAdapter(max_retries=retry)
+        self._session.mount('http://', adapter)
+        self._session.mount('https://', adapter)
         resp = self._session.request(method, url, params=params)
         resp.raise_for_status()
         return resp.json()
@@ -26,19 +39,14 @@ class REST(object):
     def get(self, path, params=None):
         return self._request('GET', path, params=params)
 
-rest = REST()
+rest = REST(api_token=os.environ.get('IEX_TOKEN'))
 
 def list_symbols():
     return [
         symbol['symbol'] for symbol in refdata.get_symbols()
     ]
 
-def get_credentials(token=None):
 
-    token = token or os.environ.get('IEX_TOKEN')
-    if token is None :
-        raise ValueError('token must be given to access IEX API',
-                         ' (env: IEX_TOKEN)')
 
 def _ensure_dict(result, symbols):
     if len(symbols) == 1:
@@ -112,20 +120,24 @@ def _get_stockprices(symbols, chart_range='1y'):
     return parallelize(fetch, splitlen=99)(symbols)
 
 def advancedstats():
-    all_symbols = list_symbols()
+    all_symbols =list_symbols()
     return _advancedstats(all_symbols)
 
 
 @quarterly_cache(filename='iex_advanced-stats.pkl')
 def _advancedstats(all_symbols):
     def fetch(symbol):
-        path = '/{}/advanced-stats'.format(symbol[0])
-        res = rest.get(path)
-        if len(res) == 1:
-            return {symbol[0]: res}
-        else:
+        try:
+            path = '/{}/advanced-stats'.format(symbol[0])
+            res = rest.get(path)
+            if len(res) >0:
+                return {symbol[0]: res}
+            else:
+                return {"NORESULT": {}}
+        except Exception as e:
+            print(symbol,'cache error {}'.format(e), res)
             return {"NORESULT": {}}
-    return parallelize(fetch, workers=50, splitlen=1)(all_symbols)
+    return parallelize(fetch, workers=20, splitlen=1)(all_symbols)
 
 
 def income():
@@ -136,17 +148,22 @@ def income():
 @quarterly_cache(filename='iex_income.pkl')
 def _income(all_symbols):
     def fetch(symbol):
-        path = '/{}/income'.format(symbol[0])
-        params = {
-            'period': 'quarter',
-            'last': 12,
-        }
-        res = rest.get(path, params)
-        if len(res) == 1:
-            return {symbol[0]: res['income'][0]}
-        else:
+        try:
+            path = '/{}/income'.format(symbol[0])
+            params = {
+                'period': 'quarter',
+                'last': 12,
+            }
+            res = rest.get(path, params)
+
+            if len(res['income']) >0:
+                return {symbol[0]: res['income']}
+            else:
+                return {"NORESULT": {}}
+        except Exception as e:
+            print(symbol,'cache error {}'.format(e), res)
             return {"NORESULT": {}}
-    return parallelize(fetch, workers=50, splitlen=1)(all_symbols)
+    return parallelize(fetch, workers=20, splitlen=1)(all_symbols)
 
 
 def balancesheet():
@@ -157,14 +174,19 @@ def balancesheet():
 @quarterly_cache(filename='iex_balancesheet.pkl')
 def _balancesheet(all_symbols):
     def fetch(symbol):
-        path = '/{}/balance-sheet'.format(symbol[0])
-        params = {
-            'period': 'quarter',
-            'last': 12,
-        }
-        res = rest.get(path, params)
-        if len(res) == 1:
-            return {symbol[0]: res['balancesheet'][0]}
-        else:
+        try:
+            path = '/{}/balance-sheet'.format(symbol[0])
+            params = {
+                'period': 'quarter',
+                'last': 12,
+            }
+            res = rest.get(path, params)
+            if len(res['balancesheet']) >0:
+                return {symbol[0]: res['balancesheet']}
+            else:
+                return {"NORESULT": {}}
+        except Exception as e:
+            print(symbol,'cache error {}'.format(e), res)
             return {"NORESULT": {}}
-    return parallelize(fetch, workers=50, splitlen=1)(all_symbols)
+
+    return parallelize(fetch, workers=20, splitlen=1)(all_symbols)

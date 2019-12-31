@@ -348,103 +348,53 @@ class IEXBalanceSheet(DataSet):
 class IEXKeyStats(DataSet):
 
     '''
-  "companyName": "Apple Inc.",
-  "marketcap": 760334287200,
-  "beta": 1.295227,
-  "week52high": 156.65,
-  "week52low": 93.63,
-  "week52change": 58.801903,
-  "shortInterest": 55544287,
-  "shortDate": "2017-06-15",
-  "dividendRate": 2.52,
-  "dividendYield": 1.7280395,
-  "exDividendDate": "2017-05-11 00:00:00.0",
-  "latestEPS": 8.29,
-  "latestEPSDate": "2016-09-30",
-  "sharesOutstanding": 5213840000,
-  "float": 5203997571,
-  "returnOnEquity": 0.08772939519857577,
-  "consensusEPS": 3.22,
-  "numberOfEstimates": 15,
-  "symbol": "AAPL",
-  "EBITDA": 73828000000,
-  "revenue": 220457000000,
-  "grossProfit": 84686000000,
-  "cash": 256464000000,
-  "debt": 358038000000,
-  "ttmEPS": 8.55,
-  "revenuePerShare": 42.2830389885382,
-  "revenuePerEmployee": 1900491.3793103448,
-  "peRatioHigh": 25.5,
-  "peRatioLow": 8.7,
-  "EPSSurpriseDollar": null,
-  "EPSSurprisePercent": 3.9604,
-  "returnOnAssets": 14.15,
-  "returnOnCapital": null,
-  "profitMargin": 20.73,
-  "priceToSales": 3.6668503,
-  "priceToBook": 6.19,
-  "day200MovingAvg": 140.60541,
-  "day50MovingAvg": 156.49678,
-  "institutionPercent": 32.1,
-  "insiderPercent": null,
-  "shortRatio": 1.6915414,
-  "year5ChangePercent": 0.5902546932200027,
-  "year2ChangePercent": 0.3777449874142869,
-  "year1ChangePercent": 0.39751716851558366,
-  "ytdChangePercent": 0.36659492036160124,
-  "month6ChangePercent": 0.12208398133748043,
-  "month3ChangePercent": 0.08466584665846649,
-  "month1ChangePercent": 0.009668596145283263,
-  "day5ChangePercent": -0.005762605699968781
-    '''
+    "week52change":0.891812,
+    "week52high":294.85,
+    "week52low":148,
+    "marketcap":1287722038343,
+    "employees":141588,
+    "day200MovingAvg":224.82,
+    "day50MovingAvg":272.13,
+    "float":4591748076,
+    "avg10Volume":32008185.1,
+    "avg30Volume":26009094.8,
+    "ttmEPS":11.9403,
+    "ttmDividendRate":3,
+    "companyName":"Apple,Inc.",
+    "sharesOutstanding":4621785519,
+    "maxChangePercent":292.7652,
+    "year5ChangePercent":1.6305,
+    "year2ChangePercent":0.722,
+    "year1ChangePercent":0.879295,
+    "ytdChangePercent":0.840802,
+    "month6ChangePercent":0.482568,
+    "month3ChangePercent":0.305952,
+    "month1ChangePercent":0.086811,
+    "day30ChangePercent":0.103839,
+    "day5ChangePercent":0.037825,
+    "nextDividendDate":null,
+    "dividendYield":0.010573715641493318,
+    "nextEarningsDate":"2020-02-18",
+    "exDividendDate":"2019-11-19",
+    "peRatio":25.08,
+    "beta":1.6117314506008147
+     '''
 
-    companyName = Column(object_dtype)
-    marketcap = Column(float64_dtype, missing_value=np.nan)
-    beta = Column(float64_dtype, missing_value=np.nan)
+    week52change = Column(float64_dtype, missing_value=np.nan)
     week52high = Column(float64_dtype, missing_value=np.nan)
     week52low = Column(float64_dtype, missing_value=np.nan)
-    week52change = Column(float64_dtype, missing_value=np.nan)
-    shortInterest = Column(float64_dtype, missing_value=np.nan)
-    shortDate = Column(
-        datetime64ns_dtype,
-        missing_value=np.datetime64('1970-01-01'))
-    dividendRate = Column(float64_dtype, missing_value=np.nan)
-    dividendYield = Column(float64_dtype, missing_value=np.nan)
-    exDividendDate = Column(
-        datetime64ns_dtype,
-        missing_value=np.datetime64('1970-01-01'))
-    latestEPS = Column(float64_dtype, missing_value=np.nan)
-    latestEPSDate = Column(
-        datetime64ns_dtype,
-        missing_value=np.datetime64('1970-01-01'))
-    sharesOutstanding = Column(float64_dtype, missing_value=np.nan)
-    float = Column(float64_dtype, missing_value=np.nan)
-    returnOnEquity = Column(float64_dtype, missing_value=np.nan)
-    consensusEPS = Column(float64_dtype, missing_value=np.nan)
-    numberOfEstimates = Column(float64_dtype, missing_value=np.nan)
-    symbol = Column(object_dtype)
-    EBITDA = Column(float64_dtype, missing_value=np.nan)
-    revenue = Column(float64_dtype, missing_value=np.nan)
-    grossProfit = Column(float64_dtype, missing_value=np.nan)
-    cash = Column(float64_dtype, missing_value=np.nan)
-    debt = Column(float64_dtype, missing_value=np.nan)
-    ttmEPS = Column(float64_dtype, missing_value=np.nan)
-    revenuePerShare = Column(float64_dtype, missing_value=np.nan)
-    revenuePerEmployee = Column(float64_dtype, missing_value=np.nan)
-    peRatio = Column(float64_dtype, missing_value=np.nan)
-    EPSSurpriseDollar = Column(float64_dtype, missing_value=np.nan)
-    EPSSurprisePercent = Column(float64_dtype, missing_value=np.nan)
-    returnOnAssets = Column(float64_dtype, missing_value=np.nan)
-    returnOnCapital = Column(float64_dtype, missing_value=np.nan)
-    profitMargin = Column(float64_dtype, missing_value=np.nan)
-    priceToSales = Column(float64_dtype, missing_value=np.nan)
-    priceToBook = Column(float64_dtype, missing_value=np.nan)
+    marketcap = Column(float64_dtype, missing_value=np.nan)
+    employees = Column(float64_dtype, missing_value=np.nan)
     day200MovingAvg = Column(float64_dtype, missing_value=np.nan)
     day50MovingAvg = Column(float64_dtype, missing_value=np.nan)
-    institutionPercent = Column(float64_dtype, missing_value=np.nan)
-    insiderPercent = Column(float64_dtype, missing_value=np.nan)
-    shortRatio = Column(float64_dtype, missing_value=np.nan)
+    float = Column(float64_dtype, missing_value=np.nan)
+    avg10Volume = Column(float64_dtype, missing_value=np.nan)
+    avg30Volume = Column(float64_dtype, missing_value=np.nan)
+    ttmEPS = Column(float64_dtype, missing_value=np.nan)
+    ttmDividendRate = Column(float64_dtype, missing_value=np.nan)
+    companyName = Column(object_dtype, missing_value='')
+    sharesOutstanding = Column(float64_dtype, missing_value=np.nan)
+    maxChangePercent = Column(float64_dtype, missing_value=np.nan)
     year5ChangePercent = Column(float64_dtype, missing_value=np.nan)
     year2ChangePercent = Column(float64_dtype, missing_value=np.nan)
     year1ChangePercent = Column(float64_dtype, missing_value=np.nan)
@@ -452,7 +402,20 @@ class IEXKeyStats(DataSet):
     month6ChangePercent = Column(float64_dtype, missing_value=np.nan)
     month3ChangePercent = Column(float64_dtype, missing_value=np.nan)
     month1ChangePercent = Column(float64_dtype, missing_value=np.nan)
+    day30ChangePercent = Column(float64_dtype, missing_value=np.nan)
     day5ChangePercent = Column(float64_dtype, missing_value=np.nan)
+    nextDividendDate = Column(
+        datetime64ns_dtype,
+        missing_value=np.datetime64('1970-01-01'))
+    dividendYield = Column(float64_dtype, missing_value=np.nan)
+    nextEarningsDate = Column(
+        datetime64ns_dtype,
+        missing_value=np.datetime64('1970-01-01'))
+    exDividendDate = Column(
+        datetime64ns_dtype,
+        missing_value=np.datetime64('1970-01-01'))
+    peRatio = Column(float64_dtype, missing_value=np.nan)
+    beta = Column(float64_dtype, missing_value=np.nan)
 
     _loader = IEXKeyStatsLoader()
 

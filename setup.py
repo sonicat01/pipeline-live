@@ -28,7 +28,7 @@ setup(
         'alpaca-trade-api>=0.29',
         'iexfinance>=0.4.1',
         'zipline==1.3.0',
-        'numpy',
+        'numpy', 'requests', 'urllib3'
     ],
     tests_require=[
         'pytest',
