@@ -50,7 +50,7 @@ class REST(object):
         params = params or {}
         params['api_key'] = os.environ.get('QUANDL_TOKEN')
         print(url, params)
-        retry = Retry(connect=10, backoff_factor=0.5)
+        retry = Retry(connect=3, backoff_factor=2)
         adapter = HTTPAdapter(max_retries=retry)
         self._session.mount('http://', adapter)
         self._session.mount('https://', adapter)
@@ -72,13 +72,13 @@ def fundamentials():
 @quarterly_cache(filename='quandl_fundamentials.pkl')
 def _fundamentials(all_symbols):
     def fetch(symbol):
-        # try:
+        try:
             path = '/datatables/SHARADAR/SF1'
             params = {}
             params['dimension'] = 'MRQ'
             params['ticker']=symbol[0]
             res = rest.get(path, params=params)
-            if len(res) >0:
+            if len(res) >0 and len(res['datatable']['data']) > 0:
                 data =res['datatable']['data'][0]
                 columns = res['datatable']['columns']
                 dict = {}
@@ -91,7 +91,7 @@ def _fundamentials(all_symbols):
                 return ans
             else:
                 return {"NORESULT": {}}
-        # except Exception as e:
-        #     print(symbol,'cache error {}'.format(e))
-        #     return {"NORESULT": {}}
-    return parallelize(fetch, workers=20, splitlen=1)(all_symbols)
+        except Exception as e:
+            print(symbol,'cache error {}'.format(e))
+            return {"NORESULT": {}}
+    return parallelize(fetch, workers=2, splitlen=1)(all_symbols)
