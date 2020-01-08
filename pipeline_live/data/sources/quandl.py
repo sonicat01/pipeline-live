@@ -69,7 +69,7 @@ def fundamentials():
     return _fundamentials(all_symbols)
 
 #https://www.quandl.com/api/v3/datatables/SHARADAR/SF1?dimension=MRY&ticker=AAPL&api_key=Vy9HqmyJLWYUFMGt31E8
-@quarterly_cache(filename='quandl_fundamentials.pkl')
+@monthly_cache(filename='quandl_fundamentials.pkl')
 def _fundamentials(all_symbols):
     def fetch(symbol):
         try:
