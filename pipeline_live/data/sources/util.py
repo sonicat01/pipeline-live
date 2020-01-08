@@ -82,11 +82,7 @@ def monthly_cache(filename):
     def decorator(func):
         def wrapper(*args, **kwargs):
             key = args + (kwd_mark,) + tuple(sorted(kwargs.items()))
-            hash = hashlib.md5()
-            hash.update(str(key).encode('utf-8'))
-            hash.update(pd.Timestamp.utcnow().strftime(
-                '%Y-%m').encode('utf-8'))
-            digest = hash.hexdigest()
+            digest = pd.Timestamp.utcnow().strftime('%Y-%m').encode('utf-8')
             dirpath = paths.data_path(['monthlycache'])
             os.makedirs(dirpath, exist_ok=True)
             filepath = os.path.join(dirpath, filename)
@@ -118,11 +114,9 @@ def quarterly_cache(filename):
     def decorator(func):
         def wrapper(*args, **kwargs):
             key = args + (kwd_mark,) + tuple(sorted(kwargs.items()))
-            hash = hashlib.md5()
-            hash.update(str(key).encode('utf-8'))
-            hash.update(pd.Timestamp.utcnow().strftime(
-                '%Y-%q').encode('utf-8'))
-            digest = hash.hexdigest()
+            s = pd.Timestamp.utcnow()
+            date = str(s.year) + "-" + str((s.month %4))
+            digest = date
             dirpath = paths.data_path(['quarterlycache'])
             os.makedirs(dirpath, exist_ok=True)
             filepath = os.path.join(dirpath, filename)
